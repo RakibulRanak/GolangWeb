@@ -1,23 +1,28 @@
-#branch devtest
-#phase0
-#phase00000
 package main
 
 import (
-	"fmt"
 	"net/http"
 )
 
 func handleFunc(w http.ResponseWriter, req *http.Request) {
-	switch req.URL.Path {
-	case "/home":
-		fmt.Fprintf(w, "welcome to home\n")
-	case "/profile":
-		fmt.Fprintf(w, "This is your profile\n")
+	w.Header().Set("Content-Type", "application/json")
+	switch req.Method {
+	case "GET":
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"message": "Data fetch"}`))
+	case "POST":
+		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte(`{"message": "Data Create"}`))
+	case "PUT":
+		w.WriteHeader(http.StatusAccepted)
+		w.Write([]byte(`{"message": "Data update"}`))
+	case "DELETE":
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"message": "Data delete"}`))
 	default:
-		fmt.Fprintf(w, "Page not found\n")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(`{"message": "not found"}`))
 	}
-
 }
 
 func main() {
