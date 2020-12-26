@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 	"github.com/go-chi/chi"
-	"GolangWeb/routers"
+	"GolangWeb/handlers"
 
 	
 )
@@ -12,11 +12,8 @@ func main() {
 
 	port := ":8090"
 	r := chi.NewRouter()
-	routers.CustomPrint();
-	r.Get("/", routers.Delhandle)
-	r.Post("/", routers.Posthandle)
-	r.Put("/", routers.Puthandle)
-	r.Delete("/", routers.Delhandle)
+	userHandler := handlers.NewUserHandler()
+	r.Route("/users", userHandler.Handle)
 	http.ListenAndServe(port, r)
 	
 }
