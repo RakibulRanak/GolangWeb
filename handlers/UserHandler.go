@@ -3,19 +3,24 @@ package handlers
 import (
 	"net/http"
 	"github.com/go-chi/chi"	
+	"GolangWeb/controllers"
 )
 type UserHandler struct {
 }
 
 func NewUserHandler() *UserHandler {
+	
 	return &UserHandler{}
 }
 
 func (h *UserHandler) Handle(router chi.Router) {
+	
 	router.Get("/all", h.getUser)  
 	router.Post("/", h.createUser) 
 	router.Put("/", h.updateUser)
 	router.Delete("/", h.deleteUser)
+	authController := controllers.NewAuthController()
+	router.Post("/login",authController.LoginUser)
 }
 
 func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
