@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"github.com/go-chi/chi"	
 	"GolangWeb/services"
+	"strconv"
 )
 type UserHandler struct {
 }
@@ -15,12 +17,16 @@ func NewUserHandler() *UserHandler {
 
 func (h *UserHandler) Handle(router chi.Router) {
 	
+	router.Route("/{id}", func(router chi.Router) {
+		router.Get("/", h.getUserByID)
+		//router.Delete("/", h.deleteUser)
+	})
 	router.Get("/all", h.getUser)  
 	router.Post("/", h.createUser) 
 	router.Put("/", h.updateUser)
 	router.Delete("/", h.deleteUser)
-	authService := services.NewAuthService()
-	router.Post("/login",authService.LoginUser)
+	userService := services.NewUserService()
+	router.Post("/login",userService.LoginUser)
 }
 
 func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
@@ -46,3 +52,22 @@ func (h *UserHandler) deleteUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(204)
 }
 
+func (h *UserHandler) getUserByID(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(idStr)
+	fmt.Println(err)
+	Id:=uint(id)
+	userService := services.NewUserService()
+	d, e := userService.GetUserByID(Id)
+	if e != nil {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(200)
+		w.Write([]byte(`{"name" : "Not found"}`))
+		fmt.Println(d)
+	}else{
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(200)
+		w.Write([]byte(`{"name" : "Ranak"}`))
+		fmt.Println(d)
+	}
+}
