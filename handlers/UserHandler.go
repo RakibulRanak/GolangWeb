@@ -6,10 +6,13 @@ import (
 	"github.com/go-chi/chi"	
 	"GolangWeb/services"
 	"strconv"
+	"encoding/json"
 )
 type UserHandler struct {
 }
-
+type myresponse struct{
+	Name string `json:"name"`
+}
 func NewUserHandler() *UserHandler {
 	
 	return &UserHandler{}
@@ -67,7 +70,11 @@ func (h *UserHandler) getUserByID(w http.ResponseWriter, r *http.Request) {
 	}else{
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(200)
-		w.Write([]byte(`{"name" : "Ranak"}`))
+		resp1:=myresponse{Name:d}
+		byteArray,err := json.Marshal(resp1)
+		if err==nil{
+		w.Write([]byte(byteArray))
+		}
 		fmt.Println(d)
 	}
 }
