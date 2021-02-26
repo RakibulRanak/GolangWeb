@@ -1,0 +1,4 @@
+export GOCACHE="/home/rakibulranak/.cache/go-build"
+export GOPATH=~/GolangWeb
+go env
+
